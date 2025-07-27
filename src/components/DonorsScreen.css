@@ -1,0 +1,286 @@
+/* Donors Screen Styles */
+
+.donors-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.donors-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.donors-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.donors-subtitle {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.search-section {
+  margin-bottom: 24px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.search-input {
+  flex: 1;
+  padding: 16px 20px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #bdc3c7;
+}
+
+.search-button {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+}
+
+.search-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.filters-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.filter-select {
+  padding: 12px 16px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.donors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.donor-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.donor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.donor-avatar {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.donor-avatar svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.donor-info {
+  flex: 1;
+}
+
+.donor-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+}
+
+.donor-details {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0 0 4px 0;
+}
+
+.donor-location {
+  font-size: 13px;
+  color: #95a5a6;
+  margin: 0;
+}
+
+.contact-button {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.contact-button:hover {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  transform: translateY(-1px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .donors-container {
+    padding: 16px;
+  }
+  
+  .donors-title {
+    font-size: 24px;
+  }
+  
+  .donors-subtitle {
+    font-size: 14px;
+  }
+  
+  .search-input {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+  
+  .search-button {
+    padding: 14px 16px;
+  }
+  
+  .filters-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .filter-select {
+    min-width: auto;
+  }
+  
+  .donor-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .donor-avatar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .donor-avatar svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .contact-button {
+    width: 100%;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .donors-title {
+    color: white;
+  }
+  
+  .donors-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .search-box {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .search-input {
+    background: transparent;
+    color: white;
+  }
+  
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .filter-label {
+    color: white;
+  }
+  
+  .filter-select {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+  
+  .donor-card {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .donor-name {
+    color: white;
+  }
+  
+  .donor-details {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .donor-location {
+    color: rgba(255, 255, 255, 0.5);
+  }
+} 
