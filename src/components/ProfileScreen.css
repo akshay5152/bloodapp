@@ -17,7 +17,6 @@
   border-radius: 16px;
   padding: 32px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .profile-header {
@@ -64,7 +63,6 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
-  border: 2px solid white;
   transition: all 0.3s ease;
 }
 
@@ -100,7 +98,6 @@
   padding: 16px 20px;
   background: rgba(52, 152, 219, 0.1);
   border-radius: 12px;
-  border-left: 4px solid #3498db;
   transition: all 0.3s ease;
 }
 
@@ -149,6 +146,125 @@
   background: linear-gradient(135deg, #c0392b, #a93226);
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(231, 76, 60, 0.4);
+}
+
+/* Contact Section Styles */
+.contact-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-top: 16px;
+}
+
+.contact-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.contact-icons {
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+}
+
+.contact-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 80px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.contact-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.contact-icon:hover::before {
+  left: 100%;
+}
+
+.contact-icon svg {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.contact-icon span {
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* WhatsApp Icon */
+.contact-icon.whatsapp {
+  color: #25d366;
+}
+
+.contact-icon.whatsapp:hover {
+  background: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.contact-icon.whatsapp:hover svg {
+  transform: scale(1.1);
+}
+
+/* Call Icon */
+.contact-icon.call {
+  color: #3498db;
+}
+
+.contact-icon.call:hover {
+  background: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.contact-icon.call:hover svg {
+  transform: scale(1.1);
+}
+
+/* Email Icon */
+.contact-icon.email {
+  color: #e74c3c;
+}
+
+.contact-icon.email:hover {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.contact-icon.email:hover svg {
+  transform: scale(1.1);
 }
 
 /* Mobile Responsive */
@@ -322,7 +438,6 @@
 @media (prefers-color-scheme: dark) {
   .profile-container {
     background: rgba(26, 35, 50, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
   }
 
   .profile-container h2 {
@@ -340,7 +455,6 @@
 
   .mobile-bottom-nav {
     background: rgba(26, 35, 50, 0.95);
-    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
   .mobile-nav-item {

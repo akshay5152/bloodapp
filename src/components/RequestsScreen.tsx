@@ -186,105 +186,106 @@ const RequestsScreen: React.FC = () => {
           </button>
         </div>
 
-
-
-        {/* Enhanced Requests List */}
-        <div className="requests-list">
-          {allItems.map((item) => (
-            <div key={item.id} className={`recent-request-item ${item.status}`}>
-              {item.type === 'request' ? (
-                <>
-                  <div className="request-header">
-                    <div className="request-status-wrapper">
-                      <div className={`request-status ${item.status}`}>
-                        <span className="status-icon">{getStatusIcon(item.status || 'normal')}</span>
-                        <span className="status-text">{item.status === 'urgent' ? 'URGENT' : 'NORMAL'}</span>
+        {/* Scrollable Content Area */}
+        <div className="requests-content">
+          {/* Enhanced Requests List */}
+          <div className="requests-list">
+            {allItems.map((item) => (
+              <div key={item.id} className={`recent-request-item ${item.status}`}>
+                {item.type === 'request' ? (
+                  <>
+                    <div className="request-header">
+                      <div className="request-status-wrapper">
+                        <div className={`request-status ${item.status}`}>
+                          <span className="status-icon">{getStatusIcon(item.status || 'normal')}</span>
+                          <span className="status-text">{item.status === 'urgent' ? 'URGENT' : 'NORMAL'}</span>
+                        </div>
+                        <div 
+                          className="priority-indicator" 
+                          style={{ backgroundColor: getPriorityColor(item.priority || 'medium') }}
+                        ></div>
                       </div>
-                      <div 
-                        className="priority-indicator" 
-                        style={{ backgroundColor: getPriorityColor(item.priority || 'medium') }}
-                      ></div>
-                    </div>
-                    <div className="request-time-badge">
-                      <span className="time-icon">⏰</span>
-                      <span className="time-text">{item.time}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="request-content">
-                    <div className="patient-info">
-                      <h4 className="patient-name">{item.patientName}</h4>
-                      <div className="blood-info">
-                        <span className="blood-group-badge">{item.bloodGroup}</span>
-                        <span className="units-info">{item.units} unit{item.units > 1 ? 's' : ''}</span>
+                      <div className="request-time-badge">
+                        <span className="time-icon">⏰</span>
+                        <span className="time-text">{item.time}</span>
                       </div>
                     </div>
                     
-                                         <div className="request-details">
-                       <div className="detail-item">
-                         <span className="detail-icon">🏥</span>
-                         <span className="detail-text">{item.hospital}</span>
-                       </div>
-                       <div className="detail-item">
-                         <span className="detail-icon">📍</span>
-                         <span className="detail-text">{item.location}</span>
-                       </div>
-                       <div className="detail-item">
-                         <span className="detail-icon">📱</span>
-                         <span className="detail-text">{item.mobileNumber}</span>
-                       </div>
-                     </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="request-header">
-                    <div className="request-status-wrapper">
-                      <div className="request-status donation">
-                        <span className="status-icon">✅</span>
-                        <span className="status-text">DONATED</span>
+                    <div className="request-content">
+                      <div className="patient-info">
+                        <h4 className="patient-name">{item.patientName}</h4>
+                        <div className="blood-info">
+                          <span className="blood-group-badge">{item.bloodGroup}</span>
+                          <span className="units-info">{item.units} unit{item.units > 1 ? 's' : ''}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="request-details">
+                        <div className="detail-item">
+                          <span className="detail-icon">🏥</span>
+                          <span className="detail-text">{item.hospital}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-icon">📍</span>
+                          <span className="detail-text">{item.location}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-icon">📱</span>
+                          <span className="detail-text">{item.mobileNumber}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="request-time-badge">
-                      <span className="time-icon">⏰</span>
-                      <span className="time-text">{item.time}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="request-content">
-                    <div className="patient-info">
-                      <h4 className="patient-name">{item.donorName}</h4>
-                      <div className="blood-info">
-                        <span className="blood-group-badge">{item.bloodGroup}</span>
-                        <span className="units-info">{item.units} unit</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="request-header">
+                      <div className="request-status-wrapper">
+                        <div className="request-status donation">
+                          <span className="status-icon">✅</span>
+                          <span className="status-text">DONATED</span>
+                        </div>
+                      </div>
+                      <div className="request-time-badge">
+                        <span className="time-icon">⏰</span>
+                        <span className="time-text">{item.time}</span>
                       </div>
                     </div>
                     
-                    <div className="request-details">
-                      <div className="detail-item">
-                        <span className="detail-icon">🏥</span>
-                        <span className="detail-text">{item.hospital}</span>
+                    <div className="request-content">
+                      <div className="patient-info">
+                        <h4 className="patient-name">{item.donorName}</h4>
+                        <div className="blood-info">
+                          <span className="blood-group-badge">{item.bloodGroup}</span>
+                          <span className="units-info">{item.units} unit</span>
+                        </div>
                       </div>
-                      <div className="detail-item">
-                        <span className="detail-icon">💬</span>
-                        <span className="detail-text">{item.message}</span>
+                      
+                      <div className="request-details">
+                        <div className="detail-item">
+                          <span className="detail-icon">🏥</span>
+                          <span className="detail-text">{item.hospital}</span>
+                        </div>
+                        <div className="detail-item">
+                          <span className="detail-icon">💬</span>
+                          <span className="detail-text">{item.message}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {filteredRequests.length === 0 && (
-          <div className="empty-state">
-            <div className="empty-icon">📭</div>
-            <h3 className="empty-title">No requests found</h3>
-            <p className="empty-description">There are no blood requests matching your current filter.</p>
+                  </>
+                )}
+              </div>
+            ))}
           </div>
-        )}
+
+          {/* Empty State */}
+          {filteredRequests.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-icon">📭</div>
+              <h3 className="empty-title">No requests found</h3>
+              <p className="empty-description">There are no blood requests matching your current filter.</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Enhanced Mobile Bottom Navigation */}

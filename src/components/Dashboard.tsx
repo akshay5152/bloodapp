@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 import './Dashboard.css';
 import DonorsScreen from './DonorsScreen';
 import RequestsScreen from './RequestsScreen';
 import DonateScreen from './DonateScreen';
 import BloodRequestPage from './BloodRequestPage';
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DashboardProps {
   mobileNumber: string;
@@ -17,6 +22,40 @@ const Dashboard: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) => {
 
 const DashboardContent: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [isRegisteredAsDonor, setIsRegisteredAsDonor] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
+  // Sample notifications data
+  const notifications = [
+    {
+      id: 1,
+      type: 'urgent',
+      title: 'Urgent Blood Request',
+      message: 'A+ blood needed urgently at City General Hospital',
+      time: '2 minutes ago',
+      read: false
+    },
+    {
+      id: 2,
+      type: 'donation',
+      title: 'Blood Donation Successful',
+      message: 'Thank you for your donation. You helped save a life!',
+      time: '1 hour ago',
+      read: false
+    },
+    {
+      id: 3,
+      type: 'reminder',
+      title: 'Donation Reminder',
+      message: 'You are eligible to donate blood again. Schedule your next donation.',
+      time: '3 hours ago',
+      read: true
+    }
+  ];
+
+  const unreadCount = notifications.filter(n => !n.read).length;
   
   const getPageTitle = () => {
     switch (location.pathname) {
@@ -35,8 +74,62 @@ const DashboardContent: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) 
     return location.pathname === path || (path === '/' && location.pathname === '/');
   };
 
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const handleNotificationItemClick = (notificationId: number) => {
+    // Mark notification as read
+    console.log('Notification clicked:', notificationId);
+    setShowNotifications(false);
+  };
+
+  const handleDonorRegistration = () => {
+    if (!isRegisteredAsDonor) {
+      setIsRegisteredAsDonor(true);
+      setShowSuccessModal(true);
+    } else {
+      // Navigate to request screen when already registered
+      navigate('/requests');
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+  };
+
   return (
     <div className="dashboard-container">
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Success!</h3>
+              <button className="modal-close" onClick={handleCloseModal}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h4>Successfully registered as donor!</h4>
+              <p>You can proceed with helping donors.</p>
+            </div>
+            <div className="modal-footer">
+              <button className="modal-button" onClick={handleCloseModal}>
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-content">
@@ -49,12 +142,68 @@ const DashboardContent: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) 
             <h1 className="app-name">BloodApp</h1>
           </div>
           <div className="header-actions">
-            <button className="notification-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              <span className="notification-badge">3</span>
-            </button>
+            <div className="notification-container">
+              <button className="notification-btn" onClick={handleNotificationClick}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+              </button>
+              
+              {showNotifications && (
+                <div className="notification-popover">
+                  <div className="popover-header">
+                    <h3>Notifications</h3>
+                    <button className="close-btn" onClick={() => setShowNotifications(false)}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="popover-content">
+                    {notifications.length === 0 ? (
+                      <div className="no-notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        <p>No notifications</p>
+                      </div>
+                    ) : (
+                      notifications.map((notification) => (
+                        <div 
+                          key={notification.id}
+                          className={`notification-item ${!notification.read ? 'unread' : ''}`}
+                          onClick={() => handleNotificationItemClick(notification.id)}
+                        >
+                          <div className="notification-icon">
+                            {notification.type === 'urgent' && (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                              </svg>
+                            )}
+                            {notification.type === 'donation' && (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                              </svg>
+                            )}
+                            {notification.type === 'reminder' && (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="notification-content">
+                            <h4 className="notification-title">{notification.title}</h4>
+                            <span className="notification-time">{notification.time}</span>
+                          </div>
+                          {!notification.read && <div className="unread-indicator"></div>}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -62,7 +211,13 @@ const DashboardContent: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) 
       {/* Main Content */}
       <main className="dashboard-main">
         <Routes>
-          <Route path="/" element={<DashboardHome mobileNumber={mobileNumber} />} />
+          <Route path="/" element={
+            <DashboardHome 
+              mobileNumber={mobileNumber} 
+              isRegisteredAsDonor={isRegisteredAsDonor}
+              onDonorRegistration={handleDonorRegistration}
+            />
+          } />
           <Route path="/requests" element={<RequestsScreen />} />
           <Route path="/profile" element={<ProfileScreen mobileNumber={mobileNumber} onLogout={onLogout} />} />
           <Route path="/donate" element={<DonateScreen />} />
@@ -99,7 +254,11 @@ const DashboardContent: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) 
   );
 };
 
-const DashboardHome: React.FC<{ mobileNumber: string }> = ({ mobileNumber }) => {
+const DashboardHome: React.FC<{ 
+  mobileNumber: string; 
+  isRegisteredAsDonor: boolean; 
+  onDonorRegistration: () => void; 
+}> = ({ mobileNumber, isRegisteredAsDonor, onDonorRegistration }) => {
   const [selectedArea, setSelectedArea] = useState('all');
 
   // Mock data for donor statistics by area
@@ -186,8 +345,112 @@ const DashboardHome: React.FC<{ mobileNumber: string }> = ({ mobileNumber }) => 
     percentage: (count / donorStats.totalDonors) * 100
   }));
 
+  // Prepare data for pie chart
+  const chartData = {
+    labels: bloodGroupData.map(item => item.group),
+    datasets: [
+      {
+        data: bloodGroupData.map(item => item.count),
+        backgroundColor: bloodGroupData.map(item => getBloodGroupColor(item.group)),
+        borderColor: bloodGroupData.map(item => getBloodGroupColor(item.group)),
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          font: {
+            size: 12,
+            weight: 'bold' as const,
+          },
+          generateLabels: function(chart: any) {
+            const data = chart.data;
+            if (data.labels.length && data.datasets.length) {
+              return data.labels.map((label: string, i: number) => {
+                const value = data.datasets[0].data[i];
+                const percentage = ((value / donorStats.totalDonors) * 100).toFixed(1);
+                return {
+                  text: `${label}: ${value} (${percentage}%)`,
+                  fillStyle: data.datasets[0].backgroundColor[i],
+                  strokeStyle: data.datasets[0].borderColor[i],
+                  lineWidth: 2,
+                  pointStyle: 'circle',
+                  hidden: false,
+                  index: i
+                };
+              });
+            }
+            return [];
+          }
+        },
+      },
+      tooltip: {
+        enabled: true,
+        mode: 'index' as const,
+        intersect: false,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: '#ffffff',
+        borderWidth: 2,
+        cornerRadius: 10,
+        displayColors: true,
+        padding: 12,
+        titleFont: {
+          size: 14,
+          weight: 'bold' as const
+        },
+        bodyFont: {
+          size: 12
+        },
+        callbacks: {
+          title: function(context: any) {
+            return `🩸 Blood Group: ${context[0].label}`;
+          },
+          label: function(context: any) {
+            const label = context.label || '';
+            const value = context.parsed;
+            const percentage = ((value / donorStats.totalDonors) * 100).toFixed(1);
+            const totalDonors = donorStats.totalDonors;
+            const remaining = totalDonors - value;
+            
+            return [
+              `📊 Count: ${value} donors`,
+              `📈 Percentage: ${percentage}%`,
+              `📋 Total in ${selectedArea === 'all' ? 'all areas' : selectedArea}: ${totalDonors}`,
+              `🔍 Remaining: ${remaining} donors`,
+              `🎯 Rank: ${getRank(value, donorStats.bloodGroups)}`,
+              `💡 Hover for more details!`
+            ];
+          }
+        }
+      }
+    },
+  };
+
   const handleAreaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedArea(e.target.value);
+  };
+
+  // Helper function to get rank of a blood group
+  const getRank = (value: number, bloodGroups: { [key: string]: number }) => {
+    const sortedGroups = Object.values(bloodGroups).sort((a, b) => b - a);
+    const rank = sortedGroups.indexOf(value) + 1;
+    const total = sortedGroups.length;
+    
+    if (rank === 1) return '1st (Highest)';
+    if (rank === 2) return '2nd';
+    if (rank === 3) return '3rd';
+    if (rank === total) return `${rank}th (Lowest)`;
+    return `${rank}th`;
   };
 
   return (
@@ -277,13 +540,18 @@ const DashboardHome: React.FC<{ mobileNumber: string }> = ({ mobileNumber }) => 
               </svg>
             </div>
             <div className="card-content">
-              <h3 className="card-title">Donate Blood</h3>
-              <p className="card-description">Register as donor and save lives</p>
+              <h3 className="card-title">{isRegisteredAsDonor ? "Help Donors" : "Donate Blood"}</h3>
+              <p className="card-description">
+                {isRegisteredAsDonor ? "Click to help donors" : "Register as donor and save lives"}
+              </p>
             </div>
           </div>
-          <Link to="/donate" className="donor-button">
-            Register as Donor
-          </Link>
+          <button 
+            onClick={onDonorRegistration} 
+            className={`donor-button ${isRegisteredAsDonor ? 'help-button' : 'full-screen-button'}`}
+          >
+            {isRegisteredAsDonor ? "Click to Help Donor" : "Register as Donor"}
+          </button>
         </div>
 
         <div className="dashboard-card">
@@ -363,26 +631,8 @@ const DashboardHome: React.FC<{ mobileNumber: string }> = ({ mobileNumber }) => 
               </p>
             </div>
             <div className="chart-container">
-              <div className="chart-bars">
-                {bloodGroupData.map(({ group, count, percentage }) => (
-                  <div key={group} className="chart-bar-item">
-                    <div className="bar-label">
-                      <span className="blood-group">{group}</span>
-                      <span className="blood-count">{count}</span>
-                    </div>
-                    <div className="bar-container">
-                                          <div 
-                      className="bar-fill"
-                      style={{ 
-                        height: `${percentage}%`,
-                        backgroundColor: getBloodGroupColor(group)
-                      }}
-                    >
-                      <span className="bar-percentage">{percentage.toFixed(1)}%</span>
-                    </div>
-                    </div>
-                  </div>
-                ))}
+              <div className="pie-chart-wrapper">
+                <Pie data={chartData} options={chartOptions} />
               </div>
             </div>
           </div>
@@ -392,19 +642,19 @@ const DashboardHome: React.FC<{ mobileNumber: string }> = ({ mobileNumber }) => 
   );
 };
 
-// Helper function to get blood group colors
+// Helper function to get blood group colors (light/pastel shades)
 const getBloodGroupColor = (bloodGroup: string): string => {
   const colors: { [key: string]: string } = {
-    'A+': '#e74c3c',
-    'A-': '#c0392b',
-    'B+': '#3498db',
-    'B-': '#2980b9',
-    'AB+': '#9b59b6',
-    'AB-': '#8e44ad',
-    'O+': '#27ae60',
-    'O-': '#229954'
+    'A+': '#ffb3b3',  // Light red
+    'A-': '#ffcccc',  // Lighter red
+    'B+': '#b3d9ff',  // Light blue
+    'B-': '#cce5ff',  // Lighter blue
+    'AB+': '#e6ccff', // Light purple
+    'AB-': '#f0e6ff', // Lighter purple
+    'O+': '#b3ffb3',  // Light green
+    'O-': '#ccffcc'   // Lighter green
   };
-  return colors[bloodGroup] || '#95a5a6';
+  return colors[bloodGroup] || '#f0f0f0';
 };
 
 const ProfileScreen: React.FC<{ mobileNumber: string; onLogout: () => void }> = ({ mobileNumber, onLogout }) => {
