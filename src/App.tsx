@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
@@ -8,7 +8,8 @@ import BloodRequestPage from './components/BloodRequestPage';
 import RequestsScreen from './components/RequestsScreen';
 import ProfileScreen from './components/ProfileScreen';
 
-function App() {
+function AppContent() {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     // Check localStorage on initial load
     const savedLoginState = localStorage.getItem('isLoggedIn');
@@ -45,13 +46,13 @@ function App() {
   };
 
   const handleRegister = () => {
-    // This will now navigate to the register route
-    window.location.href = '/register';
+    // Use React Router navigation instead of window.location
+    navigate('/register');
   };
 
   const handleRegisterSuccess = () => {
-    // Redirect to login after successful registration
-    window.location.href = '/';
+    // Use React Router navigation instead of window.location
+    navigate('/');
   };
 
   const handleLogout = () => {
@@ -61,55 +62,61 @@ function App() {
   };
 
   return (
+    <div className="App">
+      <Routes>
+        <Route path="/" element={
+          isLoggedIn ? (
+            <Dashboard mobileNumber={userMobile} onLogout={handleLogout} />
+          ) : (
+            <LoginScreen onLogin={handleLogin} onRegister={handleRegister} />
+          )
+        } />
+        <Route path="/register" element={
+          isLoggedIn ? (
+            <Navigate to="/" replace />
+          ) : (
+            <RegisterScreen 
+              onBackToLogin={() => navigate('/')}
+              onRegisterSuccess={handleRegisterSuccess}
+            />
+          )
+        } />
+        <Route path="/blood-request" element={
+          isLoggedIn ? (
+            <BloodRequestPage 
+              onBackToDashboard={() => navigate(-1)}
+              onRequestSuccess={() => {
+                alert('Blood request submitted successfully!');
+                navigate(-1);
+              }}
+            />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
+        <Route path="/requests" element={
+          isLoggedIn ? (
+            <RequestsScreen />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
+        <Route path="/profile" element={
+          isLoggedIn ? (
+            <ProfileScreen mobileNumber={userMobile} onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
+      </Routes>
+    </div>
+  );
+}
+
+function App() {
+  return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={
-            isLoggedIn ? (
-              <Dashboard mobileNumber={userMobile} onLogout={handleLogout} />
-            ) : (
-              <LoginScreen onLogin={handleLogin} onRegister={handleRegister} />
-            )
-          } />
-          <Route path="/register" element={
-            isLoggedIn ? (
-              <Navigate to="/" replace />
-            ) : (
-              <RegisterScreen 
-                onBackToLogin={() => window.location.href = '/'}
-                onRegisterSuccess={handleRegisterSuccess}
-              />
-            )
-          } />
-          <Route path="/blood-request" element={
-            isLoggedIn ? (
-              <BloodRequestPage 
-                onBackToDashboard={() => window.history.back()}
-                onRequestSuccess={() => {
-                  alert('Blood request submitted successfully!');
-                  window.history.back();
-                }}
-              />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          } />
-          <Route path="/requests" element={
-            isLoggedIn ? (
-              <RequestsScreen />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          } />
-          <Route path="/profile" element={
-            isLoggedIn ? (
-              <ProfileScreen mobileNumber={userMobile} onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          } />
-        </Routes>
-      </div>
+      <AppContent />
     </Router>
   );
 }

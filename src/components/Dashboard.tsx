@@ -3,7 +3,7 @@ import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import './Dashboard.css';
-import DonorsScreen from './DonorsScreen';
+
 import RequestsScreen from './RequestsScreen';
 import DonateScreen from './DonateScreen';
 import BloodRequestPage from './BloodRequestPage';
@@ -571,22 +571,7 @@ const DashboardHome: React.FC<{
           </Link>
         </div>
 
-        <div className="dashboard-card">
-          <div className="card-header">
-            <div className="card-icon blue-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
-            </div>
-            <div className="card-content">
-              <h3 className="card-title">Blood Donors</h3>
-              <p className="card-description">Find nearby donors</p>
-            </div>
-          </div>
-          <Link to="/donors" className="card-button blue-button">
-            Find Donors
-          </Link>
-        </div>
+
       </div>
 
       {/* Donor Statistics Section */}

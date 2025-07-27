@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodApp Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e74c3c;
+            text-align: center;
+        }
+        .upload-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px dashed #e74c3c;
+            border-radius: 10px;
+        }
+        .icon-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .icon-item {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .download-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .download-btn:hover {
+            background: #c0392b;
+        }
+        .instructions {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .instructions h3 {
+            color: #2980b9;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🩸 BloodApp Icon Generator</h1>
+        
+        <div class="upload-section">
+            <h3>Upload your logo.jpeg file</h3>
+            <input type="file" id="logoInput" accept="image/*">
+            <p><small>Upload your logo.jpeg file to generate Android app icons</small></p>
+        </div>
+
+        <div class="instructions">
+            <h3>📱 Android Icon Sizes Required:</h3>
+            <ul>
+                <li><strong>mipmap-mdpi</strong>: 48x48 px</li>
+                <li><strong>mipmap-hdpi</strong>: 72x72 px</li>
+                <li><strong>mipmap-xhdpi</strong>: 96x96 px</li>
+                <li><strong>mipmap-xxhdpi</strong>: 144x144 px</li>
+                <li><strong>mipmap-xxxhdpi</strong>: 192x192 px</li>
+                <li><strong>Play Store</strong>: 512x512 px</li>
+            </ul>
+        </div>
+
+        <div id="iconPreview" class="icon-preview"></div>
+    </div>
+
+    <script>
+        const iconSizes = [
+            { name: 'mdpi', size: 48, folder: 'mipmap-mdpi' },
+            { name: 'hdpi', size: 72, folder: 'mipmap-hdpi' },
+            { name: 'xhdpi', size: 96, folder: 'mipmap-xhdpi' },
+            { name: 'xxhdpi', size: 144, folder: 'mipmap-xxhdpi' },
+            { name: 'xxxhdpi', size: 192, folder: 'mipmap-xxxhdpi' },
+            { name: 'playstore', size: 512, folder: 'Play Store' }
+        ];
+
+        document.getElementById('logoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    generateIcons(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateIcons(imageSrc) {
+            const preview = document.getElementById('iconPreview');
+            preview.innerHTML = '';
+
+            iconSizes.forEach(icon => {
+                const container = document.createElement('div');
+                container.className = 'icon-item';
+
+                const canvas = document.createElement('canvas');
+                canvas.width = icon.size;
+                canvas.height = icon.size;
+                canvas.style.width = '100px';
+                canvas.style.height = '100px';
+
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.onload = function() {
+                    // Create circular background
+                    ctx.beginPath();
+                    ctx.arc(icon.size/2, icon.size/2, icon.size/2, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fill();
+
+                    // Draw image in center
+                    const size = icon.size * 0.7;
+                    const x = (icon.size - size) / 2;
+                    const y = (icon.size - size) / 2;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(icon.size/2, icon.size/2, size/2, 0, 2 * Math.PI);
+                    ctx.clip();
+                    ctx.drawImage(img, x, y, size, size);
+                    ctx.restore();
+
+                    // Add download button
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'download-btn';
+                    downloadBtn.textContent = `Download ${icon.name}`;
+                    downloadBtn.onclick = () => downloadCanvas(canvas, `ic_launcher_${icon.name}.png`);
+                    
+                    container.innerHTML = `
+                        <h4>${icon.folder}</h4>
+                        <p>${icon.size}x${icon.size}px</p>
+                    `;
+                    container.appendChild(canvas);
+                    container.appendChild(downloadBtn);
+                };
+                img.src = imageSrc;
+
+                preview.appendChild(container);
+            });
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html> 

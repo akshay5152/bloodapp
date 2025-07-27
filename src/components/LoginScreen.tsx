@@ -123,14 +123,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister }) => {
               )}
             </button>
 
-            <div className="action-links">
-              <button
-                onClick={onRegister}
-                className="link-button"
-              >
-                New User? Register Here
-              </button>
-            </div>
+                         <div className="action-links">
+               <button
+                 onClick={onRegister}
+                 className="link-button"
+               >
+                 New User? Register Here
+               </button>
+             </div>
           </div>
         ) : (
           /* OTP Input */
@@ -191,12 +191,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister }) => {
         </div>
       </div>
 
-      {/* Floating Elements */}
-      <div className="floating-element element-1"></div>
-      <div className="floating-element element-2"></div>
-      <div className="floating-element element-3"></div>
-    </div>
-  );
-};
+             {/* Floating Elements */}
+       <div className="floating-element element-1"></div>
+       <div className="floating-element element-2"></div>
+       <div className="floating-element element-3"></div>
+     </div>
+   );
+ };
 
 export default LoginScreen; 

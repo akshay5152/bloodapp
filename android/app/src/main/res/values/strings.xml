@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BloodApp - Connect. Donate. Save Lives.</string>
+    <string name="title_activity_main">BloodApp - Connect. Donate. Save Lives.</string>
+    <string name="package_name">com.bloodapp.app</string>
+    <string name="custom_url_scheme">com.bloodapp.app</string>
+</resources>
