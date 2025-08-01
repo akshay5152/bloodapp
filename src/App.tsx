@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import LoginScreen from './components/LoginScreen';
+import AdminLoginScreen from './components/AdminLoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import Dashboard from './components/Dashboard';
+import AdminDashboard from './components/AdminDashboard';
 import BloodRequestPage from './components/BloodRequestPage';
 import RequestsScreen from './components/RequestsScreen';
 import ProfileScreen from './components/ProfileScreen';
@@ -23,6 +25,19 @@ function AppContent() {
     console.log('App initialization - userMobile:', savedMobile);
     return savedMobile;
   });
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
+    // Check localStorage for admin login
+    const savedAdminLoginState = localStorage.getItem('isAdminLoggedIn');
+    const savedAdminUsername = localStorage.getItem('adminUsername');
+    console.log('App initialization - savedAdminLoginState:', savedAdminLoginState, 'savedAdminUsername:', savedAdminUsername);
+    return savedAdminLoginState === 'true' && savedAdminUsername ? true : false;
+  });
+  const [adminUsername, setAdminUsername] = useState(() => {
+    // Get saved admin username from localStorage
+    const savedAdminUsername = localStorage.getItem('adminUsername') || '';
+    console.log('App initialization - adminUsername:', savedAdminUsername);
+    return savedAdminUsername;
+  });
 
   // Save login state to localStorage whenever it changes
   useEffect(() => {
@@ -37,6 +52,20 @@ function AppContent() {
       console.log('Cleared localStorage');
     }
   }, [isLoggedIn, userMobile]);
+
+  // Save admin login state to localStorage whenever it changes
+  useEffect(() => {
+    console.log('Admin login state changed - isAdminLoggedIn:', isAdminLoggedIn, 'adminUsername:', adminUsername);
+    if (isAdminLoggedIn) {
+      localStorage.setItem('isAdminLoggedIn', 'true');
+      localStorage.setItem('adminUsername', adminUsername);
+      console.log('Saved to localStorage - isAdminLoggedIn: true, adminUsername:', adminUsername);
+    } else {
+      localStorage.removeItem('isAdminLoggedIn');
+      localStorage.removeItem('adminUsername');
+      console.log('Cleared admin localStorage');
+    }
+  }, [isAdminLoggedIn, adminUsername]);
 
   const handleLogin = (mobileNumber: string, otp: string) => {
     // In a real app, you would validate the OTP with your backend
@@ -61,14 +90,36 @@ function AppContent() {
     setUserMobile('');
   };
 
+  const handleAdminLogin = (username: string, password: string) => {
+    // In a real app, you would validate admin credentials with your backend
+    console.log('Admin login successful:', { username, password });
+    setAdminUsername(username);
+    setIsAdminLoggedIn(true);
+  };
+
+  const handleAdminLogout = () => {
+    console.log('Admin logout called');
+    setIsAdminLoggedIn(false);
+    setAdminUsername('');
+  };
+
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={
-          isLoggedIn ? (
+          isAdminLoggedIn ? (
+            <AdminDashboard username={adminUsername} onLogout={handleAdminLogout} />
+          ) : isLoggedIn ? (
             <Dashboard mobileNumber={userMobile} onLogout={handleLogout} />
           ) : (
-            <LoginScreen onLogin={handleLogin} onRegister={handleRegister} />
+            <LoginScreen onLogin={handleLogin} onRegister={handleRegister} onAdminLogin={() => navigate('/admin')} />
+          )
+        } />
+        <Route path="/admin" element={
+          isAdminLoggedIn ? (
+            <AdminDashboard username={adminUsername} onLogout={handleAdminLogout} />
+          ) : (
+            <AdminLoginScreen onAdminLogin={handleAdminLogin} onBackToUserLogin={() => navigate('/')} />
           )
         } />
         <Route path="/register" element={
