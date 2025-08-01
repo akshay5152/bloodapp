@@ -951,4 +951,190 @@
   .login-footer p {
     color: rgba(255, 255, 255, 0.5);
   }
+}
+
+/* Register Modal Styles */
+.register-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.register-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 0;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register-modal-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.register-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-close-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.register-modal-content {
+  padding: 24px;
+}
+
+.register-option {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.register-option:hover {
+  border-color: #667eea;
+  background: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.register-option:last-child {
+  margin-bottom: 0;
+}
+
+.register-option-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.register-option-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.register-option-content {
+  flex: 1;
+}
+
+.register-option-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.register-option-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #718096;
+  line-height: 1.5;
+}
+
+.register-option-arrow {
+  color: #cbd5e0;
+  transition: all 0.3s ease;
+}
+
+.register-option:hover .register-option-arrow {
+  color: #667eea;
+  transform: translateX(4px);
+}
+
+.register-option-arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive Design for Modal */
+@media (max-width: 768px) {
+  .register-modal {
+    margin: 20px;
+  }
+  
+  .register-modal-header {
+    padding: 20px;
+  }
+  
+  .register-modal-content {
+    padding: 20px;
+  }
+  
+  .register-option {
+    padding: 16px;
+  }
+  
+  .register-option-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .register-option-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .register-option-content h4 {
+    font-size: 16px;
+  }
+  
+  .register-option-content p {
+    font-size: 13px;
+  }
 } 

@@ -1,0 +1,765 @@
+/* Hospital Register Screen Styles - Mobile & Web Compatible */
+
+.hospital-register-container {
+  min-height: 100vh;
+  width: 100%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-y: auto;
+}
+
+.hospital-register-card {
+  background: white;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  border-radius: 0;
+  padding: 16px;
+  box-shadow: none;
+  border: none;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.hospital-register-card::before {
+  display: none;
+}
+
+.hospital-register-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 24px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.header-icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  z-index: 2;
+  position: relative;
+}
+
+.header-text {
+  flex: 1;
+  text-align: center;
+}
+
+.back-button {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  z-index: 10;
+}
+
+.back-button:hover {
+  background: none;
+  transform: translateY(-50%) translateX(-2px);
+}
+
+.back-button svg {
+  width: 24px;
+  height: 24px;
+  stroke: #667eea;
+  stroke-width: 2.5;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover svg {
+  stroke: #667eea;
+  transform: scale(1.1);
+}
+
+.hospital-register-title {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+  text-align: center;
+}
+
+.hospital-register-subtitle {
+  font-size: 18px;
+  color: #64748b;
+  margin: 0 auto;
+  font-weight: 500;
+  line-height: 1.6;
+  max-width: 400px;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+  text-align: center;
+}
+
+/* Form Styles */
+.hospital-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  padding: 20px;
+  border: 2px solid #667eea;
+  border-radius: 16px;
+  background: #f8fafc;
+  margin: 0 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-label::after {
+  content: ' *';
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.form-label:not([for*="*"])::after {
+  content: '';
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 14px 16px;
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  color: #1e293b;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background: white;
+  transform: translateY(-1px);
+}
+
+.form-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* Input Wrapper for Mobile Verification */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.input-wrapper .form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.country-code {
+  position: absolute;
+  left: 16px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.form-input[type="tel"] {
+  padding-left: 48px;
+  flex: 1;
+}
+
+.verify-mobile-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+.verify-mobile-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.verify-mobile-btn:hover::before {
+  left: 100%;
+}
+
+.verify-mobile-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+}
+
+.verify-mobile-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Buttons */
+.primary-button {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.primary-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.primary-button:hover::before {
+  left: 100%;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.verify-button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.verify-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.error-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #ef4444;
+}
+
+.error-message svg {
+  width: 20px;
+  height: 20px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.error-message span {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Action Links */
+.action-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.link-button:hover:not(:disabled) {
+  color: #5a67d8;
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+.link-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* OTP Drawer */
+.otp-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  animation: fadeIn 0.3s ease;
+}
+
+.otp-drawer {
+  width: 100%;
+  max-width: 450px;
+  height: 100%;
+  background: white;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.otp-drawer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.otp-drawer-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #667eea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.otp-drawer-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.close-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+.otp-drawer-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.otp-info {
+  text-align: center;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 14px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.otp-info p {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.otp-info strong {
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.otp-input {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .hospital-register-container {
+    padding: 0;
+  }
+  
+  .hospital-register-card {
+    padding: 12px;
+    border-radius: 0;
+  }
+  
+  .hospital-register-title {
+    font-size: 20px;
+  }
+  
+  .hospital-register-subtitle {
+    font-size: 15px;
+    max-width: calc(100% - 70px);
+  }
+  
+  .hospital-register-form {
+    padding: 16px;
+    margin: 0 4px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .form-input,
+  .form-select {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+  
+  .primary-button {
+    padding: 16px 18px;
+    font-size: 15px;
+  }
+  
+  .otp-drawer {
+    max-width: 100%;
+  }
+  
+  .otp-drawer-header {
+    padding: 12px 16px;
+  }
+  
+  .otp-drawer-content {
+    padding: 12px;
+  }
+  
+  .back-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .verify-mobile-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+  
+  .input-wrapper {
+    gap: 8px;
+  }
+  
+  .hospital-register-header {
+    text-align: center;
+    padding: 16px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+/* Tablet Responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hospital-register-card {
+    padding: 20px;
+  }
+  
+  .hospital-register-form {
+    padding: 24px;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 1025px) {
+  .hospital-register-card {
+    padding: 24px;
+  }
+  
+  .hospital-register-form {
+    padding: 28px;
+  }
+}
+
+/* Focus Styles for Accessibility */
+.primary-button:focus,
+.link-button:focus,
+.form-input:focus,
+.form-select:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .hospital-register-container {
+    background: #0f172a;
+  }
+  
+  .hospital-register-card {
+    background: #0f172a;
+  }
+  
+  .hospital-register-form {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .hospital-register-title {
+    color: white;
+  }
+  
+  .hospital-register-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .form-label {
+    color: white;
+  }
+  
+  .form-input,
+  .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+  
+  .form-input:focus,
+  .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .otp-drawer {
+    background: #0f172a;
+  }
+  
+  .otp-drawer-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .otp-drawer-header h3 {
+    color: white;
+  }
+  
+  .close-button {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .close-button:hover {
+    color: #60a5fa;
+  }
+  
+  .otp-info {
+    background: rgba(102, 126, 234, 0.2);
+  }
+  
+  .otp-info p {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .otp-info strong {
+    color: white;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

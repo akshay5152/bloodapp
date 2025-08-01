@@ -4,6 +4,7 @@ import './App.css';
 import LoginScreen from './components/LoginScreen';
 import AdminLoginScreen from './components/AdminLoginScreen';
 import RegisterScreen from './components/RegisterScreen';
+import HospitalRegisterScreen from './components/HospitalRegisterScreen';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 import BloodRequestPage from './components/BloodRequestPage';
@@ -79,6 +80,11 @@ function AppContent() {
     navigate('/register');
   };
 
+  const handleHospitalRegister = () => {
+    // Use React Router navigation instead of window.location
+    navigate('/hospital-register');
+  };
+
   const handleRegisterSuccess = () => {
     // Use React Router navigation instead of window.location
     navigate('/');
@@ -112,7 +118,7 @@ function AppContent() {
           ) : isLoggedIn ? (
             <Dashboard mobileNumber={userMobile} onLogout={handleLogout} />
           ) : (
-            <LoginScreen onLogin={handleLogin} onRegister={handleRegister} onAdminLogin={() => navigate('/admin')} />
+            <LoginScreen onLogin={handleLogin} onRegister={handleRegister} onHospitalRegister={handleHospitalRegister} onAdminLogin={() => navigate('/admin')} />
           )
         } />
         <Route path="/admin" element={
@@ -127,6 +133,16 @@ function AppContent() {
             <Navigate to="/" replace />
           ) : (
             <RegisterScreen 
+              onBackToLogin={() => navigate('/')}
+              onRegisterSuccess={handleRegisterSuccess}
+            />
+          )
+        } />
+        <Route path="/hospital-register" element={
+          isLoggedIn ? (
+            <Navigate to="/" replace />
+          ) : (
+            <HospitalRegisterScreen 
               onBackToLogin={() => navigate('/')}
               onRegisterSuccess={handleRegisterSuccess}
             />

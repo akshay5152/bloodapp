@@ -4,16 +4,18 @@ import './LoginScreen.css';
 interface LoginScreenProps {
   onLogin: (mobileNumber: string, otp: string) => void;
   onRegister: () => void;
+  onHospitalRegister: () => void;
   onAdminLogin?: () => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister, onAdminLogin }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister, onHospitalRegister, onAdminLogin }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, size: number}>>([]);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   // Generate floating particles
   useEffect(() => {
@@ -176,25 +178,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister, onAdminL
 
             <div className="action-links">
               <button
-                onClick={onRegister}
+                onClick={() => setShowRegisterModal(true)}
                 className="link-button"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="link-icon">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-                New User? Register Here
+                New Register
               </button>
-              {onAdminLogin && (
-                <button
-                  onClick={onAdminLogin}
-                  className="link-button admin-link"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="link-icon">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  Admin Login
-                </button>
-              )}
             </div>
           </div>
         ) : (
@@ -275,6 +266,57 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister, onAdminL
       <div className="floating-element element-1"></div>
       <div className="floating-element element-2"></div>
       <div className="floating-element element-3"></div>
+
+      {/* Register Modal */}
+      {showRegisterModal && (
+        <div className="register-modal-overlay" onClick={() => setShowRegisterModal(false)}>
+          <div className="register-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="register-modal-header">
+              <h3>Choose Registration Type</h3>
+              <button onClick={() => setShowRegisterModal(false)} className="modal-close-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="register-modal-content">
+              <div className="register-option" onClick={() => { setShowRegisterModal(false); onRegister(); }}>
+                <div className="register-option-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div className="register-option-content">
+                  <h4>User Registration</h4>
+                  <p>Register as an individual user to donate or request blood</p>
+                </div>
+                <div className="register-option-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+              
+              <div className="register-option" onClick={() => { setShowRegisterModal(false); onHospitalRegister(); }}>
+                <div className="register-option-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <div className="register-option-content">
+                  <h4>Hospital Registration</h4>
+                  <p>Register your hospital to manage blood bank and connect with donors</p>
+                </div>
+                <div className="register-option-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
