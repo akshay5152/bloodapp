@@ -561,9 +561,7 @@
 }
 
 .stats-grid {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr;
+ width: 100% !important;
 }
 
 .stats-card {
