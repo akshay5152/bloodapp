@@ -70,7 +70,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ username, onLogout }) =
     pendingRequests: 23,
     emergencyRequests: 8,
     bloodAvailable: 45,
-    recentDonations: 12
+    recentDonations: 12,
+    livesSavedWeek: 23,
+    livesSavedMonth: 89
   });
 
   // Sample data for recent requests
@@ -552,7 +554,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
         <div className="admin-stat-card requests">
           <div className="admin-stat-icon requests">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
           </div>
           <div className="admin-stat-content">
@@ -564,7 +566,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
         <div className="admin-stat-card donors">
           <div className="admin-stat-icon donors">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
             </svg>
           </div>
           <div className="admin-stat-content">
@@ -588,12 +590,36 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
         <div className="admin-stat-card emergency">
           <div className="admin-stat-icon emergency">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </div>
           <div className="admin-stat-content">
             <h3>{stats.emergencyRequests}</h3>
             <p>Emergency Requests</p>
+          </div>
+        </div>
+
+        <div className="admin-stat-card lives-saved-week">
+          <div className="admin-stat-icon lives-saved-week">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </div>
+          <div className="admin-stat-content">
+            <h3>{stats.livesSavedWeek}</h3>
+            <p>Lives Saved Last Week</p>
+          </div>
+        </div>
+
+        <div className="admin-stat-card lives-saved-month">
+          <div className="admin-stat-icon lives-saved-month">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+          </div>
+          <div className="admin-stat-content">
+            <h3>{stats.livesSavedMonth}</h3>
+            <p>Lives Saved Last Month</p>
           </div>
         </div>
       </div>
@@ -621,7 +647,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
                 </tr>
               </thead>
               <tbody>
-                {recentRequests.map((request) => (
+                {recentRequests.slice(0, 5).map((request) => (
                   <tr key={request.id}>
                     <td>{request.id}</td>
                     <td>{request.patientName}</td>
@@ -635,6 +661,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
                 ))}
               </tbody>
             </table>
+            {recentRequests.length > 5 && (
+              <div className="admin-table-footer">
+                <span className="admin-table-more">Showing 5 of {recentRequests.length} requests</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -659,7 +690,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
                 </tr>
               </thead>
               <tbody>
-                {recentDonors.map((donor) => (
+                {recentDonors.slice(0, 5).map((donor) => (
                   <tr key={donor.id}>
                     <td>{donor.id}</td>
                     <td>{donor.name}</td>
@@ -672,6 +703,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
                 ))}
               </tbody>
             </table>
+            {recentDonors.length > 5 && (
+              <div className="admin-table-footer">
+                <span className="admin-table-more">Showing 5 of {recentDonors.length} donors</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -753,7 +789,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {filteredUsers.slice(0, 5).map((user) => (
                 <tr key={user.id}>
                   <td>{user.id}</td>
                   <td>{user.name}</td>
@@ -768,6 +804,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
               ))}
             </tbody>
           </table>
+          {filteredUsers.length > 5 && (
+            <div className="admin-table-footer">
+              <span className="admin-table-more">Showing 5 of {filteredUsers.length} users</span>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -797,7 +838,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             </tr>
           </thead>
           <tbody>
-            {recentDonors.map((donor) => (
+            {recentDonors.slice(0, 5).map((donor) => (
               <tr key={donor.id}>
                 <td>{donor.id}</td>
                 <td>{donor.name}</td>
@@ -812,6 +853,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             ))}
           </tbody>
         </table>
+        {recentDonors.length > 5 && (
+          <div className="admin-table-footer">
+            <span className="admin-table-more">Showing 5 of {recentDonors.length} donors</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -840,7 +886,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             </tr>
           </thead>
           <tbody>
-            {recentRequests.map((request) => (
+            {recentRequests.slice(0, 5).map((request) => (
               <tr key={request.id}>
                 <td>{request.id}</td>
                 <td>{request.patientName}</td>
@@ -855,6 +901,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             ))}
           </tbody>
         </table>
+        {recentRequests.length > 5 && (
+          <div className="admin-table-footer">
+            <span className="admin-table-more">Showing 5 of {recentRequests.length} requests</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -880,7 +931,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             </tr>
           </thead>
           <tbody>
-            {bloodInventory.map((item) => (
+            {bloodInventory.slice(0, 5).map((item) => (
               <tr key={item.type}>
                 <td><span className={`blood-type ${item.type.toLowerCase()}`}>{item.type}</span></td>
                 <td>{item.available}</td>
@@ -895,6 +946,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             ))}
           </tbody>
         </table>
+        {bloodInventory.length > 5 && (
+          <div className="admin-table-footer">
+            <span className="admin-table-more">Showing 5 of {bloodInventory.length} blood types</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1120,7 +1176,7 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             </tr>
           </thead>
           <tbody>
-            {hospitals.map((hospital) => (
+            {hospitals.slice(0, 5).map((hospital) => (
               <tr key={hospital.id}>
                 <td>{hospital.id}</td>
                 <td>{hospital.name}</td>
@@ -1137,6 +1193,11 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
             ))}
           </tbody>
         </table>
+        {hospitals.length > 5 && (
+          <div className="admin-table-footer">
+            <span className="admin-table-more">Showing 5 of {hospitals.length} hospitals</span>
+          </div>
+        )}
       </div>
     </div>
   );
