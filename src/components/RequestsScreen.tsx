@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './RequestsScreen.css';
+import Header from './Header';
 
 const RequestsScreen: React.FC = () => {
   const location = useLocation();
   const [activeFilter, setActiveFilter] = useState('all');
+  
+
   
   const isActive = (path: string) => {
     return location.pathname === path || (path === '/' && location.pathname === '/');
@@ -149,6 +152,11 @@ const RequestsScreen: React.FC = () => {
 
   return (
     <div className="requests-screen-container">
+      {/* Header */}
+      <Header 
+        title="Blood Requests" 
+      />
+      
       <div className="requests-container">
         {/* Enhanced Header */}
         <div className="requests-header">

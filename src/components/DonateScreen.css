@@ -2,6 +2,7 @@
 
 .donate-container {
   padding: 24px;
+  padding-top: 94px; /* Account for fixed header height (70px) + some spacing */
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -220,6 +221,7 @@ textarea.form-input {
 @media (max-width: 768px) {
   .donate-container {
     padding: 16px;
+    padding-top: 86px; /* Account for fixed header height on mobile */
   }
   
   .donate-title {

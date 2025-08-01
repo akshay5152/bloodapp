@@ -131,13 +131,26 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBackToLogin, onRegist
       <div className="register-card">
         {/* Header */}
         <div className="register-header">
-          <button onClick={onBackToLogin} className="back-button">
+          <button 
+            onClick={onBackToLogin}
+            className="back-button"
+            aria-label="Go back to login"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="register-title">Create Account</h1>
-          <p className="register-subtitle">Join BloodApp to connect with donors and recipients</p>
+          <div className="header-content-wrapper">
+            <div className="header-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div className="header-text">
+              <h1 className="register-title">Create Account</h1>
+              <p className="register-subtitle">Join BloodApp to connect with donors and recipients</p>
+            </div>
+          </div>
         </div>
 
         {/* Error Message */}

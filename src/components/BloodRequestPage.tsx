@@ -58,13 +58,26 @@ const BloodRequestPage: React.FC<BloodRequestPageProps> = ({ onBackToDashboard, 
       <div className="register-card">
         {/* Header */}
         <div className="register-header">
-          <button onClick={onBackToDashboard} className="back-button">
+          <button 
+            onClick={onBackToDashboard}
+            className="back-button"
+            aria-label="Go back to dashboard"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="register-title">Blood Request</h1>
-          <p className="register-subtitle">Submit your blood request to connect with donors</p>
+          <div className="header-content-wrapper">
+            <div className="header-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div className="header-text">
+              <h1 className="register-title">Blood Request</h1>
+              <p className="register-subtitle">Submit your blood request to connect with donors</p>
+            </div>
+          </div>
         </div>
 
         {/* Error Message */}
@@ -80,20 +93,21 @@ const BloodRequestPage: React.FC<BloodRequestPageProps> = ({ onBackToDashboard, 
         {/* Blood Request Form */}
         <div className="register-form">
           <div className="form-group">
-            <label htmlFor="bloodGroup" className="form-label">
+            <label className="form-label">
               Blood Group Required
             </label>
-            <select
-              id="bloodGroup"
-              value={formData.bloodGroup}
-              onChange={(e) => handleInputChange('bloodGroup', e.target.value)}
-              className="form-input"
-            >
-              <option value="">Select Blood Group</option>
+            <div className="blood-group-grid">
               {bloodGroups.map(group => (
-                <option key={group} value={group}>{group}</option>
+                <button
+                  key={group}
+                  type="button"
+                  className={`blood-group-btn ${formData.bloodGroup === group ? 'selected' : ''}`}
+                  onClick={() => handleInputChange('bloodGroup', group)}
+                >
+                  {group}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           <div className="form-group">

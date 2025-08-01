@@ -1,9 +1,13 @@
 import React from 'react';
 import './DonorsScreen.css';
+import Header from './Header';
 
 const DonorsScreen: React.FC = () => {
   return (
     <div className="donors-container">
+      {/* Header */}
+      <Header title="Blood Donors" />
+      
       <div className="donors-header">
         <h2 className="donors-title">Blood Donors</h2>
         <p className="donors-subtitle">Find nearby blood donors in your area</p>

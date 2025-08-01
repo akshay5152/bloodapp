@@ -3,6 +3,7 @@ import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import './Dashboard.css';
+import Header from './Header';
 
 import RequestsScreen from './RequestsScreen';
 import DonateScreen from './DonateScreen';
@@ -131,82 +132,11 @@ const DashboardContent: React.FC<DashboardProps> = ({ mobileNumber, onLogout }) 
       )}
 
       {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="app-brand">
-            <div className="app-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h1 className="app-name">BloodApp</h1>
-          </div>
-          <div className="header-actions">
-            <div className="notification-container">
-              <button className="notification-btn" onClick={handleNotificationClick}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
-              </button>
-              
-              {showNotifications && (
-                <div className="notification-popover">
-                  <div className="popover-header">
-                    <h3>Notifications</h3>
-                    <button className="close-btn" onClick={() => setShowNotifications(false)}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="popover-content">
-                    {notifications.length === 0 ? (
-                      <div className="no-notifications">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                        <p>No notifications</p>
-                      </div>
-                    ) : (
-                      notifications.map((notification) => (
-                        <div 
-                          key={notification.id}
-                          className={`notification-item ${!notification.read ? 'unread' : ''}`}
-                          onClick={() => handleNotificationItemClick(notification.id)}
-                        >
-                          <div className="notification-icon">
-                            {notification.type === 'urgent' && (
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                              </svg>
-                            )}
-                            {notification.type === 'donation' && (
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                              </svg>
-                            )}
-                            {notification.type === 'reminder' && (
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            )}
-                          </div>
-                          <div className="notification-content">
-                            <h4 className="notification-title">{notification.title}</h4>
-                            <span className="notification-time">{notification.time}</span>
-                          </div>
-                          {!notification.read && <div className="unread-indicator"></div>}
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header 
+        title={getPageTitle()} 
+        showLogout={true}
+        onLogout={onLogout}
+      />
 
       {/* Main Content */}
       <main className="dashboard-main">
@@ -457,15 +387,29 @@ const DashboardHome: React.FC<{
     <div className="dashboard-home">
       {/* Welcome Section */}
       <div className="welcome-section">
+        <div className="welcome-background">
+          <div className="welcome-particles">
+            <div className="particle"></div>
+            <div className="particle"></div>
+            <div className="particle"></div>
+            <div className="particle"></div>
+            <div className="particle"></div>
+          </div>
+        </div>
         <div className="welcome-content">
           <div className="welcome-header">
             <div className="welcome-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
+              <div className="icon-glow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
             </div>
             <div className="welcome-text">
-              <h1 className="welcome-title">Hi {userName}! 👋</h1>
+              <h1 className="welcome-title">
+                <span className="greeting">Hi {userName}!</span>
+                <span className="emoji">👋</span>
+              </h1>
               <p className="welcome-subtitle">Welcome back to BloodApp. Ready to save lives today?</p>
             </div>
           </div>
@@ -475,16 +419,25 @@ const DashboardHome: React.FC<{
       {/* Request Statistics Section */}
       <div className="stats-section">
         <div className="stats-header">
-          <h2 className="stats-title">Request Statistics</h2>
-          <p className="stats-subtitle">Overview of blood requests and their status</p>
+          <div className="header-content">
+            <h2 className="stats-title">📊 Request Statistics</h2>
+            <p className="stats-subtitle">Real-time overview of blood requests and their status</p>
+          </div>
+          <div className="header-decoration">
+            <div className="decoration-line"></div>
+            <div className="decoration-dot"></div>
+          </div>
         </div>
         
         <div className="stats-overview">
-          <div className="stat-card">
-            <div className="stat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+          <div className="stat-card primary">
+            <div className="stat-icon-wrapper">
+              <div className="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div className="icon-pulse"></div>
             </div>
             <div className="stat-content">
               <h3 className="stat-number">24</h3>
@@ -492,11 +445,14 @@ const DashboardHome: React.FC<{
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon pending">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+          <div className="stat-card warning">
+            <div className="stat-icon-wrapper">
+              <div className="stat-icon pending">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="icon-pulse"></div>
             </div>
             <div className="stat-content">
               <h3 className="stat-number">8</h3>
@@ -504,11 +460,14 @@ const DashboardHome: React.FC<{
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon urgent">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
+          <div className="stat-card danger">
+            <div className="stat-icon-wrapper">
+              <div className="stat-icon urgent">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <div className="icon-pulse urgent-pulse"></div>
             </div>
             <div className="stat-content">
               <h3 className="stat-number">3</h3>
@@ -516,11 +475,14 @@ const DashboardHome: React.FC<{
             </div>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon completed">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+          <div className="stat-card success">
+            <div className="stat-icon-wrapper">
+              <div className="stat-icon completed">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="icon-pulse"></div>
             </div>
             <div className="stat-content">
               <h3 className="stat-number">16</h3>
@@ -533,11 +495,15 @@ const DashboardHome: React.FC<{
       {/* Action Cards */}
       <div className="cards-grid">
         <div className="dashboard-card featured">
+          <div className="card-glow"></div>
           <div className="card-header">
-            <div className="card-icon green-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div className="card-icon-wrapper">
+              <div className="card-icon green-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="icon-shine"></div>
             </div>
             <div className="card-content">
               <h3 className="card-title">{isRegisteredAsDonor ? "Help Donors" : "Donate Blood"}</h3>
@@ -550,16 +516,21 @@ const DashboardHome: React.FC<{
             onClick={onDonorRegistration} 
             className={`donor-button ${isRegisteredAsDonor ? 'help-button' : 'full-screen-button'}`}
           >
-            {isRegisteredAsDonor ? "Click to Help Donor" : "Register as Donor"}
+            <span className="button-text">{isRegisteredAsDonor ? "Click to Help Donor" : "Register as Donor"}</span>
+            <span className="button-icon">→</span>
           </button>
         </div>
 
         <div className="dashboard-card">
+          <div className="card-glow"></div>
           <div className="card-header">
-            <div className="card-icon red-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+            <div className="card-icon-wrapper">
+              <div className="card-icon red-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <div className="icon-shine"></div>
             </div>
             <div className="card-content">
               <h3 className="card-title">Create Blood Request</h3>
@@ -567,11 +538,10 @@ const DashboardHome: React.FC<{
             </div>
           </div>
           <Link to="/blood-request" className="card-button emergency-button">
-            Create Request
+            <span className="button-text">Create Request</span>
+            <span className="button-icon">→</span>
           </Link>
         </div>
-
-
       </div>
 
       {/* Donor Statistics Section */}
@@ -669,7 +639,7 @@ const ProfileScreen: React.FC<{ mobileNumber: string; onLogout: () => void }> = 
             </span>
           </p>
           <p>
-            <strong>Aadhaar Number:</strong> XXXX-XXXX-1234
+            <strong>Aadhaar No:</strong> XXXX-XXXX-1234
             <span className="verified-tick">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

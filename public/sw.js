@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bloodapp-v1.0.0';
+const CACHE_NAME = 'bloodapp-v1.0.1';
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
@@ -22,14 +22,33 @@ self.addEventListener('install', event => {
 
 // Fetch event - serve from cache if available
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      }
-    )
-  );
+  // Skip cache for CSS and JS files to ensure fresh content
+  if (event.request.url.includes('.css') || event.request.url.includes('.js')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Cache the fresh response
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, responseClone);
+            });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => {
+          // Return cached version or fetch from network
+          return response || fetch(event.request);
+        })
+      );
+  }
 });
 
 // Activate event - clean up old caches

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .key {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .important {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Clear Browser Cache Instructions</h1>
+        
+        <div class="step">
+            <h3>For Chrome/Edge:</h3>
+            <ol>
+                <li>Press <span class="key">Ctrl + Shift + R</span> (Windows) or <span class="key">Cmd + Shift + R</span> (Mac)</li>
+                <li>Or press <span class="key">F12</span> → Right-click refresh button → "Empty Cache and Hard Reload"</li>
+                <li>Or go to Settings → Privacy and security → Clear browsing data</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>For Firefox:</h3>
+            <ol>
+                <li>Press <span class="key">Ctrl + Shift + R</span> (Windows) or <span class="key">Cmd + Shift + R</span> (Mac)</li>
+                <li>Or press <span class="key">F12</span> → Right-click refresh button → "Empty Cache and Hard Reload"</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>For Safari:</h3>
+            <ol>
+                <li>Press <span class="key">Cmd + Option + R</span></li>
+                <li>Or go to Safari → Preferences → Advanced → Show Develop menu → Develop → Empty Caches</li>
+            </ol>
+        </div>
+
+        <div class="step important">
+            <h3>🔄 Additional Steps:</h3>
+            <ol>
+                <li>Close all browser tabs for your app</li>
+                <li>Clear browser cache completely</li>
+                <li>Open a new incognito/private window</li>
+                <li>Navigate to your app URL</li>
+                <li>If using mobile, try opening in desktop mode or vice versa</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>🔧 Development Server:</h3>
+            <p>The development server has been restarted. If you're still seeing old content:</p>
+            <ol>
+                <li>Stop the server (Ctrl+C in terminal)</li>
+                <li>Run: <span class="key">npm start</span></li>
+                <li>Wait for "Compiled successfully!" message</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>📱 Mobile Testing:</h3>
+            <p>For mobile testing, try:</p>
+            <ol>
+                <li>Clear mobile browser cache</li>
+                <li>Use desktop mode on mobile</li>
+                <li>Test on different mobile browsers</li>
+                <li>Check if the issue persists in incognito mode</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh this page every 5 seconds to show it's working
+        setTimeout(() => {
+            location.reload();
+        }, 5000);
+    </script>
+</body>
+</html> 

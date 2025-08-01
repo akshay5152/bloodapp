@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #f5f5f5;
+  -webkit-background-color: #f5f5f5;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -12,6 +17,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f5f5f5;
+  /* Ensure solid background on mobile */
+  -webkit-background-color: #f5f5f5;
+  background-attachment: fixed;
 }
 
 code {
@@ -23,6 +31,9 @@ code {
 .App {
   text-align: center;
   min-height: 100vh;
+  background-color: #f5f5f5;
+  /* Ensure solid background on mobile */
+  -webkit-background-color: #f5f5f5;
 }
 
 /* Custom Scrollbar */
@@ -47,6 +58,14 @@ code {
 @media (max-width: 768px) {
   body {
     font-size: 16px; /* Prevents zoom on iOS */
+    background-color: #f5f5f5 !important;
+    -webkit-background-color: #f5f5f5 !important;
+    background-attachment: fixed;
+  }
+  
+  .App {
+    background-color: #f5f5f5 !important;
+    -webkit-background-color: #f5f5f5 !important;
   }
   
   input, textarea, select {
