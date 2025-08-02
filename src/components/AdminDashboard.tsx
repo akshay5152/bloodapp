@@ -18,6 +18,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ username, onLogout }) =
   const [uploadMessage, setUploadMessage] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileDrawer, setShowProfileDrawer] = useState(false);
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [selectedTarget, setSelectedTarget] = useState<'users' | 'hospitals'>('users');
+  const [emergencyType, setEmergencyType] = useState<'blood' | 'event'>('blood');
+  const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
+  const [selectedNotificationType, setSelectedNotificationType] = useState<'email' | 'sms'>('email');
+  const [uploadedEventFile, setUploadedEventFile] = useState<File | null>(null);
 
   // Sample notifications data
   const [notifications] = useState([
@@ -405,7 +411,43 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ username, onLogout }) =
   }, []);
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
+    if (tab === 'emergency') {
+      setShowEmergencyModal(true);
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
+  const handleEmergencyModalClose = () => {
+    setShowEmergencyModal(false);
+    setSelectedTarget('users');
+    setEmergencyType('blood');
+    setSelectedBloodGroup('');
+    setSelectedNotificationType('email');
+    setUploadedEventFile(null);
+  };
+
+  const handleTargetSelection = (target: 'users' | 'hospitals') => {
+    setSelectedTarget(target);
+  };
+
+  const handleEmergencySubmit = () => {
+    // Handle emergency request submission
+    console.log('Emergency request submitted:', {
+      target: selectedTarget,
+      type: emergencyType,
+      bloodGroup: selectedBloodGroup,
+      notificationType: selectedNotificationType,
+      eventFile: uploadedEventFile
+    });
+    handleEmergencyModalClose();
+  };
+
+  const handleEventFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedEventFile(file);
+    }
   };
 
   const handleLogout = () => {
@@ -1307,63 +1349,74 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
       </div>
 
       <div className="admin-nav">
+        <div className="admin-nav-left">
+          <button
+            className={`admin-nav-btn ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => handleTabChange('overview')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+            </svg>
+            Overview
+          </button>
+          <button
+            className={`admin-nav-btn ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => handleTabChange('users')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+            </svg>
+            Users
+          </button>
+          <button
+            className={`admin-nav-btn ${activeTab === 'donors' ? 'active' : ''}`}
+            onClick={() => handleTabChange('donors')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Donors
+          </button>
+          <button
+            className={`admin-nav-btn ${activeTab === 'requests' ? 'active' : ''}`}
+            onClick={() => handleTabChange('requests')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Requests
+          </button>
+          <button
+            className={`admin-nav-btn ${activeTab === 'hospitals' ? 'active' : ''}`}
+            onClick={() => handleTabChange('hospitals')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            Hospitals
+          </button>
+          <button
+            className={`admin-nav-btn ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => handleTabChange('settings')}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Inventory
+          </button>
+        </div>
+        
         <button
-          className={`admin-nav-btn ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => handleTabChange('overview')}
+          className="admin-nav-btn emergency"
+          onClick={() => handleTabChange('emergency')}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
-          Overview
+          Emergency Request
         </button>
-        <button
-          className={`admin-nav-btn ${activeTab === 'users' ? 'active' : ''}`}
-          onClick={() => handleTabChange('users')}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-          </svg>
-          Users
-        </button>
-        <button
-          className={`admin-nav-btn ${activeTab === 'donors' ? 'active' : ''}`}
-          onClick={() => handleTabChange('donors')}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          Donors
-        </button>
-        <button
-          className={`admin-nav-btn ${activeTab === 'requests' ? 'active' : ''}`}
-          onClick={() => handleTabChange('requests')}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          Requests
-        </button>
-        <button
-          className={`admin-nav-btn ${activeTab === 'hospitals' ? 'active' : ''}`}
-          onClick={() => handleTabChange('hospitals')}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-          Hospitals
-        </button>
-        <button
-          className={`admin-nav-btn ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => handleTabChange('settings')}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Inventory
-        </button>
-
       </div>
 
       <div className="admin-content">
@@ -1468,6 +1521,249 @@ Community Hospital,Community,Westside,+1-555-0500,info@communityhospital.com,+1-
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   Change Password
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Emergency Request Modal */}
+      {showEmergencyModal && (
+        <div className="modal-overlay" onClick={handleEmergencyModalClose}>
+          <div className="emergency-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="emergency-modal-header">
+              <h2>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="24" height="24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                Emergency Request
+              </h2>
+              <button 
+                className="emergency-modal-close"
+                onClick={handleEmergencyModalClose}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="emergency-modal-content">
+              {/* Target Group Selection */}
+              <div className="emergency-form-group">
+                <label>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '8px' }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  Select Target Group
+                </label>
+                <div className="radio-group">
+                  <label className="radio-item">
+                    <input
+                      type="radio"
+                      name="target"
+                      value="users"
+                      checked={selectedTarget === 'users'}
+                      onChange={() => handleTargetSelection('users')}
+                    />
+                    <span className="radio-custom"></span>
+                    <span className="radio-label">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '6px' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                      </svg>
+                      Users
+                    </span>
+                  </label>
+                  <label className="radio-item">
+                    <input
+                      type="radio"
+                      name="target"
+                      value="hospitals"
+                      checked={selectedTarget === 'hospitals'}
+                      onChange={() => handleTargetSelection('hospitals')}
+                    />
+                    <span className="radio-custom"></span>
+                    <span className="radio-label">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '6px' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                      Hospitals
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Request Type Selection */}
+              <div className="emergency-form-group">
+                <label>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '8px' }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Request Type
+                </label>
+                <div className="radio-group">
+                  <label className="radio-item">
+                    <input
+                      type="radio"
+                      name="emergencyType"
+                      value="blood"
+                      checked={emergencyType === 'blood'}
+                      onChange={(e) => setEmergencyType(e.target.value as 'blood' | 'event')}
+                    />
+                    <span className="radio-custom"></span>
+                    <span className="radio-label">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '6px' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                      Blood Group Request
+                    </span>
+                  </label>
+                  <label className="radio-item">
+                    <input
+                      type="radio"
+                      name="emergencyType"
+                      value="event"
+                      checked={emergencyType === 'event'}
+                      onChange={(e) => setEmergencyType(e.target.value as 'blood' | 'event')}
+                    />
+                    <span className="radio-custom"></span>
+                    <span className="radio-label">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '6px' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      Send Invitation for Event
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Conditional Fields */}
+              {emergencyType === 'blood' && (
+                <div className="emergency-form-group">
+                  <label>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '8px' }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    Blood Group Type
+                  </label>
+                  <select 
+                    value={selectedBloodGroup}
+                    onChange={(e) => setSelectedBloodGroup(e.target.value)}
+                    className="emergency-select"
+                  >
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                  {selectedBloodGroup && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      padding: '8px 12px', 
+                      background: 'rgba(220, 38, 38, 0.1)', 
+                      border: '1px solid rgba(220, 38, 38, 0.3)', 
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      color: '#fca5a5'
+                    }}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="14" height="14" style={{ marginRight: '6px', display: 'inline' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Emergency request will be sent for {selectedBloodGroup} blood group users and hospitals
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {emergencyType === 'event' && (
+                <>
+                  <div className="emergency-form-group">
+                    <label>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '8px' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      Upload Event File
+                    </label>
+                    <input
+                      type="file"
+                      onChange={handleEventFileUpload}
+                      className="emergency-file-input"
+                      accept=".pdf,.doc,.docx,.txt"
+                    />
+                    {uploadedEventFile && (
+                      <div style={{ 
+                        marginTop: '8px', 
+                        padding: '8px 12px', 
+                        background: 'rgba(34, 197, 94, 0.1)', 
+                        border: '1px solid rgba(34, 197, 94, 0.3)', 
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        color: '#86efac'
+                      }}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="14" height="14" style={{ marginRight: '6px', display: 'inline' }}>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        File selected: {uploadedEventFile.name}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="emergency-form-group">
+                    <label>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style={{ marginRight: '8px' }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      Notification Type
+                    </label>
+                    <select 
+                      value={selectedNotificationType}
+                      onChange={(e) => setSelectedNotificationType(e.target.value as 'email' | 'sms')}
+                      className="emergency-select"
+                    >
+                      <option value="email">Email</option>
+                      <option value="sms">SMS</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {/* Submit Button */}
+              <div className="emergency-form-actions">
+                <button 
+                  className="emergency-btn cancel"
+                  onClick={handleEmergencyModalClose}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Cancel
+                </button>
+                <button 
+                  className="emergency-btn submit"
+                  onClick={handleEmergencySubmit}
+                  disabled={emergencyType === 'blood' && !selectedBloodGroup}
+                >
+                  {emergencyType === 'blood' ? (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                      Confirm Request
+                    </>
+                  ) : (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                      Send Invitation
+                    </>
+                  )}
                 </button>
               </div>
             </div>
