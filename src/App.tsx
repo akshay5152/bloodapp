@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import LoginScreen from './components/LoginScreen';
 import AdminLoginScreen from './components/AdminLoginScreen';
@@ -10,9 +10,11 @@ import AdminDashboard from './components/AdminDashboard';
 import BloodRequestPage from './components/BloodRequestPage';
 import RequestsScreen from './components/RequestsScreen';
 import ProfileScreen from './components/ProfileScreen';
+import { Capacitor } from '@capacitor/core';
 
 function AppContent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     // Check localStorage on initial load
     const savedLoginState = localStorage.getItem('isLoggedIn');
@@ -39,6 +41,16 @@ function AppContent() {
     console.log('App initialization - adminUsername:', savedAdminUsername);
     return savedAdminUsername;
   });
+
+  const isMobileEnvironment = (): boolean => {
+    const platform = Capacitor.getPlatform();
+    if (platform === 'ios' || platform === 'android') {
+      return true;
+    }
+    const isMobileUA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const isCoarse = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
+    return isMobileUA || isCoarse;
+  };
 
   // Save login state to localStorage whenever it changes
   useEffect(() => {
@@ -67,6 +79,15 @@ function AppContent() {
       console.log('Cleared admin localStorage');
     }
   }, [isAdminLoggedIn, adminUsername]);
+
+  // Auto-route based on environment: desktop web -> admin login, mobile/app -> user login
+  useEffect(() => {
+    if (!isLoggedIn && !isAdminLoggedIn && location.pathname === '/') {
+      if (!isMobileEnvironment()) {
+        navigate('/admin', { replace: true });
+      }
+    }
+  }, [isLoggedIn, isAdminLoggedIn, location.pathname, navigate]);
 
   const handleLogin = (mobileNumber: string, otp: string) => {
     // In a real app, you would validate the OTP with your backend
