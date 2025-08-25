@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodApp - Architecture & Flow Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 60px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .slide-title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .slide-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: #666;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+            max-width: 100%;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            min-width: 280px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .flow-step::after {
+            content: '↓';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            max-width: 100%;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .tech-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tech-version {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #333;
+            z-index: 1000;
+        }
+
+        .user-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: stretch;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 100%;
+        }
+
+        .user-type {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 250px;
+            flex: 1;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-type h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .user-features {
+            list-style: none;
+            text-align: left;
+        }
+
+        .user-features li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .user-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 25px 0;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .highlight-box h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .download-section {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1000;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px 15px;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            
+            .slide-header {
+                margin-bottom: 20px;
+            }
+            
+            .slide-title {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+            
+            .slide-subtitle {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            
+            .slide-content {
+                padding: 0 10px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin: 20px 0;
+            }
+            
+            .feature-card {
+                padding: 20px;
+                min-height: 150px;
+            }
+            
+            .tech-stack {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin: 20px 0;
+            }
+            
+            .user-flow {
+                flex-direction: column;
+                gap: 15px;
+                margin: 20px 0;
+            }
+            
+            .user-type {
+                min-width: auto;
+                min-height: 200px;
+                padding: 20px;
+            }
+            
+            .flow-step {
+                min-width: auto;
+                padding: 15px 20px;
+            }
+            
+            .highlight-box {
+                padding: 20px;
+                margin: 15px 0;
+            }
+            
+            .highlight-box h3 {
+                font-size: 1.5rem;
+            }
+            
+            .highlight-box p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="download-section">
+        <button class="download-btn" onclick="downloadAsPDF()">📄 Download as PDF</button>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active" id="slide1">
+            <div class="slide-header">
+                <h1 class="slide-title">BloodApp</h1>
+                <p class="slide-subtitle">Blood Donation Management System</p>
+            </div>
+            <div class="slide-content">
+                <div class="highlight-box">
+                    <h3>🏥 Modern Blood Donation Platform</h3>
+                    <p>A comprehensive Progressive Web App (PWA) designed to connect donors, recipients, and hospitals in real-time blood donation management.</p>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">Progressive Web App</h3>
+                        <p class="feature-description">Installable on mobile and desktop with offline capabilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">Secure Authentication</h3>
+                        <p class="feature-description">OTP-based login system for users and admin panel</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Real-time Management</h3>
+                        <p class="feature-description">Instant blood requests and donor matching</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Architecture Overview -->
+        <div class="slide" id="slide2">
+            <div class="slide-header">
+                <h1 class="slide-title">System Architecture</h1>
+                <p class="slide-subtitle">Modern React-based Progressive Web Application</p>
+            </div>
+            <div class="slide-content">
+                <div class="architecture-diagram">
+                    <div class="flow-container">
+                        <div class="flow-step">
+                            <h3>Frontend Layer</h3>
+                            <p>React 19 + TypeScript + React Router</p>
+                        </div>
+                        <div class="flow-step">
+                            <h3>State Management</h3>
+                            <p>React Context API + Local Storage</p>
+                        </div>
+                        <div class="flow-step">
+                            <h3>UI Framework</h3>
+                            <p>Custom CSS + Responsive Design</p>
+                        </div>
+                        <div class="flow-step">
+                            <h3>PWA Features</h3>
+                            <p>Service Worker + Offline Support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <h3>🎯 Key Architecture Benefits</h3>
+                    <p>• Single Page Application (SPA) with client-side routing<br>
+                    • Component-based architecture for maintainability<br>
+                    • Progressive Web App capabilities for mobile deployment<br>
+                    • TypeScript for type safety and better development experience</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Technology Stack -->
+        <div class="slide" id="slide3">
+            <div class="slide-header">
+                <h1 class="slide-title">Technology Stack</h1>
+                <p class="slide-subtitle">Modern Web Technologies</p>
+            </div>
+            <div class="slide-content">
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-name">React</div>
+                        <div class="tech-version">v19.1.0</div>
+                        <p>Frontend Framework</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">TypeScript</div>
+                        <div class="tech-version">v4.9.5</div>
+                        <p>Type Safety</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">React Router</div>
+                        <div class="tech-version">v7.7.1</div>
+                        <p>Client-side Routing</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">Chart.js</div>
+                        <div class="tech-version">v4.5.0</div>
+                        <p>Data Visualization</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">Capacitor</div>
+                        <div class="tech-version">v7.4.2</div>
+                        <p>Mobile App Conversion</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-name">PWA</div>
+                        <div class="tech-version">Native</div>
+                        <p>Progressive Web App</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: User Types & Features -->
+        <div class="slide" id="slide4">
+            <div class="slide-header">
+                <h1 class="slide-title">User Types & Features</h1>
+                <p class="slide-subtitle">Comprehensive User Management</p>
+            </div>
+            <div class="slide-content">
+                <div class="user-flow">
+                    <div class="user-type">
+                        <h3>👤 Regular Users</h3>
+                        <ul class="user-features">
+                            <li>OTP-based authentication</li>
+                            <li>Blood donation requests</li>
+                            <li>Profile management</li>
+                            <li>Request history</li>
+                            <li>Dashboard analytics</li>
+                        </ul>
+                    </div>
+                    <div class="user-type">
+                        <h3>🏥 Hospitals</h3>
+                        <ul class="user-features">
+                            <li>Hospital registration</li>
+                            <li>Blood inventory management</li>
+                            <li>Donor coordination</li>
+                            <li>Emergency requests</li>
+                            <li>Event management</li>
+                        </ul>
+                    </div>
+                    <div class="user-type">
+                        <h3>👨‍💼 Admin Panel</h3>
+                        <ul class="user-features">
+                            <li>User management</li>
+                            <li>System analytics</li>
+                            <li>Emergency broadcasts</li>
+                            <li>Event invitations</li>
+                            <li>Blood group requests</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Application Flow -->
+        <div class="slide" id="slide5">
+            <div class="slide-header">
+                <h1 class="slide-title">Application Flow</h1>
+                <p class="slide-subtitle">User Journey & System Processes</p>
+            </div>
+            <div class="slide-content">
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <h3>1. Authentication</h3>
+                        <p>User login with mobile OTP or admin credentials</p>
+                    </div>
+                    <div class="flow-step">
+                        <h3>2. Dashboard Access</h3>
+                        <p>Role-based dashboard with analytics and quick actions</p>
+                    </div>
+                    <div class="flow-step">
+                        <h3>3. Blood Requests</h3>
+                        <p>Create and manage blood donation requests</p>
+                    </div>
+                    <div class="flow-step">
+                        <h3>4. Matching & Coordination</h3>
+                        <p>System matches donors with requests</p>
+                    </div>
+                    <div class="flow-step">
+                        <h3>5. Emergency Management</h3>
+                        <p>Admin can send emergency broadcasts to users/hospitals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Key Features -->
+        <div class="slide" id="slide6">
+            <div class="slide-header">
+                <h1 class="slide-title">Key Features</h1>
+                <p class="slide-subtitle">Advanced Functionality</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚨</div>
+                        <h3 class="feature-title">Emergency Requests</h3>
+                        <p class="feature-description">Admin can send emergency blood group requests or event invitations to users/hospitals via email or SMS</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Analytics Dashboard</h3>
+                        <p class="feature-description">Real-time charts and statistics for blood donation trends and user activity</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">Mobile-First Design</h3>
+                        <p class="feature-description">Responsive design optimized for mobile devices with PWA capabilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3 class="feature-title">Secure Storage</h3>
+                        <p class="feature-description">Local storage for session management and offline data persistence</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">Theme Management</h3>
+                        <p class="feature-description">Light theme configuration with modern UI/UX design patterns</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Performance Optimized</h3>
+                        <p class="feature-description">Fast loading with optimized bundles and lazy loading components</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Deployment & Scalability -->
+        <div class="slide" id="slide7">
+            <div class="slide-header">
+                <h1 class="slide-title">Deployment & Scalability</h1>
+                <p class="slide-subtitle">Production-Ready Infrastructure</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">☁️</div>
+                        <h3 class="feature-title">Cloud Deployment</h3>
+                        <p class="feature-description">Ready for deployment on Vercel, Netlify, Firebase, or GitHub Pages</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">Mobile App Conversion</h3>
+                        <p class="feature-description">Capacitor integration for native mobile app conversion</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3 class="feature-title">Easy Maintenance</h3>
+                        <p class="feature-description">Component-based architecture for easy updates and feature additions</p>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <h3>🚀 Ready for Production</h3>
+                    <p>• Optimized build process with React Scripts<br>
+                    • PWA configuration for mobile deployment<br>
+                    • TypeScript for better code quality<br>
+                    • Responsive design for all devices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Future Roadmap -->
+        <div class="slide" id="slide8">
+            <div class="slide-header">
+                <h1 class="slide-title">Future Roadmap</h1>
+                <p class="slide-subtitle">Planned Enhancements</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">Backend Integration</h3>
+                        <p class="feature-description">Connect to Node.js/Express or Firebase backend for real-time data</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔔</div>
+                        <h3 class="feature-title">Push Notifications</h3>
+                        <p class="feature-description">Real-time notifications for blood requests and updates</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🗺️</div>
+                        <h3 class="feature-title">Location Services</h3>
+                        <p class="feature-description">GPS integration for nearby donor/hospital matching</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3 class="feature-title">Advanced Analytics</h3>
+                        <p class="feature-description">Machine learning for predictive blood demand</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+            <button class="nav-btn" onclick="nextSlide()">Next →</button>
+        </div>
+
+        <!-- Slide Counter -->
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">8</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(slideNumber) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active', 'prev');
+            });
+
+            // Show current slide
+            const currentSlideElement = document.getElementById(`slide${slideNumber}`);
+            currentSlideElement.classList.add('active');
+
+            // Update counter
+            document.getElementById('currentSlide').textContent = slideNumber;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function downloadAsPDF() {
+            // Create a print-friendly version
+            window.print();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    previousSlide();
+                }
+            }
+        }
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html> 
